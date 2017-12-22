@@ -15,7 +15,7 @@ namespace System.Windows.Controls
 		#region Constants and Fields
 
 		public event EventHandler<PreviewSelectionChangedEventArgs> PreviewSelectionChanged;
-		
+
 		// TODO: Provide more details. Fire once for every single change and once for all groups of changes, with different flags
 		public event EventHandler SelectionChanged;
 
@@ -76,7 +76,7 @@ namespace System.Windows.Controls
 			typeof(MultiSelectTreeView),
 			new FrameworkPropertyMetadata(false, null));
 
-		#endregion
+		#endregion Constants and Fields
 
 		#region Constructors and Destructors
 
@@ -93,7 +93,7 @@ namespace System.Windows.Controls
 			Selection.PreviewSelectionChanged += (s, e) => { OnPreviewSelectionChanged(e); };
 		}
 
-		#endregion
+		#endregion Constructors and Destructors
 
 		#region Public Properties
 
@@ -101,7 +101,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (Brush) GetValue(BackgroundSelectionRectangleProperty);
+				return (Brush)GetValue(BackgroundSelectionRectangleProperty);
 			}
 			set
 			{
@@ -113,7 +113,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (Brush) GetValue(BorderBrushSelectionRectangleProperty);
+				return (Brush)GetValue(BorderBrushSelectionRectangleProperty);
 			}
 			set
 			{
@@ -125,7 +125,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (bool) GetValue(HoverHighlightingProperty);
+				return (bool)GetValue(HoverHighlightingProperty);
 			}
 			set
 			{
@@ -137,7 +137,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (bool) GetValue(VerticalRulersProperty);
+				return (bool)GetValue(VerticalRulersProperty);
 			}
 			set
 			{
@@ -149,7 +149,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (int) GetValue(ItemIndentProperty);
+				return (int)GetValue(ItemIndentProperty);
 			}
 			set
 			{
@@ -162,7 +162,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (bool) GetValue(IsKeyboardModeProperty);
+				return (bool)GetValue(IsKeyboardModeProperty);
 			}
 			set
 			{
@@ -174,7 +174,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (bool) GetValue(AllowEditItemsProperty);
+				return (bool)GetValue(AllowEditItemsProperty);
 			}
 			set
 			{
@@ -198,6 +198,7 @@ namespace System.Windows.Controls
 		}
 
 		private MultiSelectTreeViewItem lastFocusedItem;
+
 		/// <summary>
 		/// Gets the last focused item.
 		/// </summary>
@@ -233,7 +234,7 @@ namespace System.Windows.Controls
 		{
 			get
 			{
-				return (IList) GetValue(SelectedItemsProperty);
+				return (IList)GetValue(SelectedItemsProperty);
 			}
 			set
 			{
@@ -243,7 +244,7 @@ namespace System.Windows.Controls
 
 		internal ISelectionStrategy Selection { get; private set; }
 
-		#endregion
+		#endregion Public Properties
 
 		#region Public Methods and Operators
 
@@ -286,7 +287,7 @@ namespace System.Windows.Controls
 		public void BringItemIntoView(object item)
 		{
 			MultiSelectTreeViewItem node = GetTreeViewItemsFor(new List<object> { item }).First();
-			FrameworkElement itemContent = (FrameworkElement) node.Template.FindName("headerBorder", node);
+			FrameworkElement itemContent = (FrameworkElement)node.Template.FindName("headerBorder", node);
 			itemContent.BringIntoView();
 		}
 
@@ -320,7 +321,7 @@ namespace System.Windows.Controls
 			return Selection.SelectParentFromKey();
 		}
 
-		#endregion
+		#endregion Public Methods and Operators
 
 		#region Methods
 
@@ -385,7 +386,7 @@ namespace System.Windows.Controls
 				OnPreviewSelectionChanged(e);
 				if (e.CancelAny) return false;
 			}
-			
+
 			SelectedItems.Clear();
 			return true;
 		}
@@ -457,7 +458,7 @@ namespace System.Windows.Controls
 
 		private static void OnSelectedItemsPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			MultiSelectTreeView treeView = (MultiSelectTreeView) d;
+			MultiSelectTreeView treeView = (MultiSelectTreeView)d;
 			if (e.OldValue != null)
 			{
 				INotifyCollectionChanged collection = e.OldValue as INotifyCollectionChanged;
@@ -493,13 +494,14 @@ namespace System.Windows.Controls
 						}
 					}
 					break;
+
 				case NotifyCollectionChangedAction.Reset:
 					// If the items list has considerably changed, the selection is probably
 					// useless anyway, clear it entirely.
-					SelectedItems.Clear();
+					SelectedItems?.Clear();
 					break;
 			}
-			
+
 			base.OnItemsChanged(e);
 		}
 
@@ -512,7 +514,7 @@ namespace System.Windows.Controls
 		{
 			foreach (var item in parent.Items)
 			{
-				MultiSelectTreeViewItem tve = (MultiSelectTreeViewItem) parent.ItemContainerGenerator.ContainerFromItem(item);
+				MultiSelectTreeViewItem tve = (MultiSelectTreeViewItem)parent.ItemContainerGenerator.ContainerFromItem(item);
 				if (tve == null)
 				{
 					// Container was not generated, therefore it is probably not visible, so we can ignore it.
@@ -648,6 +650,7 @@ namespace System.Windows.Controls
 
 					LastSelectedItem = last;
 					break;
+
 				case NotifyCollectionChangedAction.Remove:
 					foreach (var item in GetTreeViewItemsFor(e.OldItems))
 					{
@@ -666,6 +669,7 @@ namespace System.Windows.Controls
 					}
 
 					break;
+
 				case NotifyCollectionChangedAction.Reset:
 					foreach (var item in RecursiveTreeViewItemEnumerable(this, true))
 					{
@@ -677,6 +681,7 @@ namespace System.Windows.Controls
 
 					LastSelectedItem = null;
 					break;
+
 				default:
 					throw new InvalidOperationException();
 			}
@@ -705,6 +710,7 @@ namespace System.Windows.Controls
 							e.Handled = true;
 						}
 						break;
+
 					case Key.Down:
 						// Select first item
 						var firstNode = RecursiveTreeViewItemEnumerable(this, false).FirstOrDefault();
@@ -766,14 +772,14 @@ namespace System.Windows.Controls
 			var lastFocusedItem = LastFocusedItem;
 			if (lastFocusedItem != null)
 			{
-				Dispatcher.BeginInvoke((Action) (() => FocusHelper.Focus(lastFocusedItem)));
+				Dispatcher.BeginInvoke((Action)(() => FocusHelper.Focus(lastFocusedItem)));
 			}
 			else
 			{
 				var firstNode = RecursiveTreeViewItemEnumerable(this, false).FirstOrDefault();
 				if (firstNode != null)
 				{
-					Dispatcher.BeginInvoke((Action) (() => FocusHelper.Focus(firstNode)));
+					Dispatcher.BeginInvoke((Action)(() => FocusHelper.Focus(firstNode)));
 				}
 			}
 		}
@@ -805,6 +811,6 @@ namespace System.Windows.Controls
 			}
 		}
 
-		#endregion
+		#endregion Methods
 	}
 }
